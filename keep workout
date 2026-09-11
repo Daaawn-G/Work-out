@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>舒展手记 - 你的身心放松运动生活志</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif; }
+        .tag-btn.active {
+            background-color: #ecfdf5;
+            border-color: #10b981;
+            color: #047857;
+            box-shadow: 0 1px 2px rgba(16, 185, 129, 0.1);
+        }
+        .mood-chip.active {
+            background-color: #fefce8;
+            border-color: #eab308;
+            color: #854d0e;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-[#F6F9F8] text-slate-800 min-h-screen pb-16 selection:bg-emerald-100 selection:text-emerald-800">
+
+    <!-- 顶栏：清新治愈风格 (浅蓝/浅绿柔和渐变微光) -->
+    <header class="border-b border-emerald-100/80 bg-white/80 backdrop-blur-md sticky top-0 z-40 px-4 lg:px-8 py-3.5">
+        <div class="max-w-5xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-linear-to-br from-sky-100 via-emerald-100 to-amber-100 border border-emerald-200/60 flex items-center justify-center text-emerald-700 shadow-xs">
+                    <i class="fa-solid fa-person-walking text-lg"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-base font-bold tracking-tight text-slate-800">舒展手记</h1>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-medium">Breathe & Motion</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400">大汗淋漓后的风，是身体最惬意的时刻</p>
+                </div>
+            </div>
+
+            <!-- 右侧：身体基础档案调节 -->
+            <div class="flex items-center gap-2">
+                <button onclick="toggleProfileModal()" class="flex items-center gap-1.5 bg-slate-50 hover:bg-emerald-50/60 border border-slate-200 hover:border-emerald-200 px-3 py-1.5 rounded-full text-xs text-slate-600 transition cursor-pointer">
+                    <i class="fa-solid fa-sliders text-emerald-600/70 text-[10px]"></i>
+                    <span id="profile-tag-text">60 kg · 168 cm · 26岁</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-4 lg:p-8 space-y-6">
+
+        <!-- 🌿 个性化手记名展示与今日舒缓正向反馈区 -->
+        <section class="bg-linear-to-r from-emerald-50/70 via-sky-50/60 to-amber-50/70 border border-emerald-100 rounded-3xl p-5 shadow-xs relative overflow-hidden">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                
+                <!-- 自定义手账本名与舒心问候 -->
+                <div class="space-y-1.5 flex-1">
+                    <div class="flex items-center gap-2">
+                        <!-- 用户可自由修改的手记别名 -->
+                        <span class="text-xs font-bold text-emerald-800 bg-white/80 border border-emerald-200 px-2.5 py-1 rounded-xl shadow-2xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-book-bookmark text-emerald-600"></i>
+                            <span id="display-custom-book-name">我的海风慢走集</span>
+                            <button onclick="editBookNamePrompt()" class="text-slate-400 hover:text-emerald-700 ml-1 cursor-pointer" title="重命名这本运动手记"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                        </span>
+                        <span class="text-xs text-slate-400" id="current-calendar-date"></span>
+                    </div>
+                    <p id="calm-positive-quote" class="text-sm font-medium text-slate-700 leading-relaxed pt-1">
+                        每一次呼吸都在置换新鲜能量，今天去吹吹晚风，或者舒展一下筋骨吧。🍃
+                    </p>
+                </div>
+
+                <!-- 今日舒缓活动度概览 (浅蓝浅绿柔和仪表) -->
+                <div class="bg-white/85 border border-slate-200/80 rounded-2xl p-3 px-4 shrink-0 flex items-center gap-4 shadow-2xs">
+                    <div class="text-center border-r border-slate-100 pr-3">
+                        <span class="text-[10px] text-slate-400 block font-medium">今日运动时长</span>
+                        <span id="today-total-duration" class="text-base font-bold text-emerald-700">0</span>
+                        <span class="text-[10px] text-slate-400">分钟</span>
+                    </div>
+                    <div class="text-center border-r border-slate-100 pr-3">
+                        <span class="text-[10px] text-slate-400 block font-medium">身体代谢约</span>
+                        <span id="today-total-calories" class="text-base font-bold text-sky-700">0</span>
+                        <span class="text-[10px] text-slate-400">kcal</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-[10px] text-slate-400 block font-medium">手记已收录</span>
+                        <span id="today-entry-count" class="text-base font-bold text-amber-600">0</span>
+                        <span class="text-[10px] text-slate-400">次活动</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 主内容区：左侧打卡录入，右侧手账日记流 -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- 📝 记录身体手记表单 (5列) -->
+            <div class="lg:col-span-5 space-y-4">
+                <div class="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-xs">
+                    <div class="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-100">
+                        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-feather-pointed"></i>
+                            </span>
+                            <span>落笔今日活动</span>
+                        </h2>
+                        <span id="estimated-cal-pill" class="text-xs font-semibold text-emerald-700 bg-emerald-50/80 border border-emerald-200/70 px-2.5 py-0.5 rounded-full">
+                            预估消耗 ~0 kcal
+                        </span>
+                    </div>
+
+                    <form onsubmit="saveWorkoutRecord(event)" class="space-y-4 text-xs">
+                        
+                        <!-- 自由活动类型 (生活化、多样化运动) -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 mb-2 flex items-center gap-1">
+                                <i class="fa-solid fa-medal text-amber-500"></i>
+                                <span>选择活动方式 (任何日常身体位移都算运动)</span>
+                            </label>
+                            <div id="sport-chips-container" class="flex flex-wrap gap-2">
+                                <!-- 动态注入标签 -->
+                            </div>
+                            <!-- 自定义标签 -->
+                            <div class="mt-2 flex gap-1.5">
+                                <input type="text" id="custom-sport-name" placeholder="添加新活动 (如：傍晚滑板/爬山看落日/收拾房间)" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-emerald-500">
+                                <button type="button" onclick="addCustomSport()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-xl text-xs font-medium text-slate-600 cursor-pointer">+ 自定义</button>
+                            </div>
+                        </div>
+
+                        <!-- 运动时长与心率数据 -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-400 mb-1">持续时长 (分钟)</label>
+                                <input type="number" id="input-duration" min="1" max="480" value="30" oninput="calculateCaloriePreview()" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 font-bold text-slate-800 focus:outline-none focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-400 mb-1">平均心率 (选填 bpm)</label>
+                                <input type="number" id="input-heartrate" min="40" max="220" placeholder="如 132" oninput="calculateCaloriePreview()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 font-bold text-slate-800 focus:outline-none focus:border-sky-500">
+                            </div>
+                        </div>
+
+                        <!-- 运动过后的心境徽章 (营造舒畅舒心的生活感) -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 mb-1.5">动完之后的体感与心境</label>
+                            <div class="grid grid-cols-4 gap-1.5 text-center">
+                                <button type="button" onclick="selectMoodChip('舒展通透 🍃')" class="mood-chip p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50/50 cursor-pointer active" data-mood="舒展通透 🍃">舒展通透 🍃</button>
+                                <button type="button" onclick="selectMoodChip('畅快微汗 💧')" class="mood-chip p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50/50 cursor-pointer" data-mood="畅快微汗 💧">畅快微汗 💧</button>
+                                <button type="button" onclick="selectMoodChip('身心放空 ☁️')" class="mood-chip p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50/50 cursor-pointer" data-mood="身心放空 ☁️">身心放空 ☁️</button>
+                                <button type="button" onclick="selectMoodChip('温热平静 ☀️')" class="mood-chip p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50/50 cursor-pointer" data-mood="温热平静 ☀️">温热平静 ☀️</button>
+                            </div>
+                        </div>
+
+                        <!-- 运动日记/生活随笔 -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 mb-1 flex justify-between">
+                                <span>运动手记 · 随笔感想</span>
+                                <span class="text-[10px] text-slate-400">记下今天耳机里的歌、微风或者身体的小反馈</span>
+                            </label>
+                            <textarea id="input-notes" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs text-slate-700 focus:outline-none focus:border-emerald-500 resize-none leading-relaxed" placeholder="吹着晚风跑了三公里，耳机里播着喜欢的歌；出了一层薄汗，整个人像从沉闷里被彻底清洗了一遍，心旷神怡..."></textarea>
+                        </div>
+
+                        <!-- 保存按钮 (浅绿微渐变，舒缓按压感) -->
+                        <button type="submit" class="w-full py-3 bg-linear-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-2xl cursor-pointer shadow-xs transition-all active:scale-[0.99] flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-check text-xs"></i>
+                            <span>收录入手记并查看舒展反馈</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 📖 手账日记瀑布流 (7列) -->
+            <div class="lg:col-span-7 space-y-4">
+                <div class="flex items-center justify-between px-1">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">漫游日记与身体足迹</h2>
+                    </div>
+                    <span id="record-count-badge" class="text-xs text-slate-400">共 0 篇手记</span>
+                </div>
+
+                <div id="journal-cards-stream" class="space-y-3.5">
+                    <!-- 动态生成的手账卡片 -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 个人基本数据设置弹窗 -->
+    <div id="profile-modal" class="fixed inset-0 bg-slate-900/30 backdrop-blur-xs flex items-center justify-center z-50 hidden px-4">
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-xl">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                <h3 class="text-sm font-bold text-slate-800">身体参数设定 (用于推算代谢量)</h3>
+                <button onclick="toggleProfileModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="text-slate-500 font-medium block mb-1">体重 (kg)</label>
+                    <input type="number" id="setting-weight" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-800">
+                </div>
+                <div>
+                    <label class="text-slate-500 font-medium block mb-1">身高 (cm)</label>
+                    <input type="number" id="setting-height" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-800">
+                </div>
+                <div>
+                    <label class="text-slate-500 font-medium block mb-1">年龄 (岁)</label>
+                    <input type="number" id="setting-age" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-800">
+                </div>
+            </div>
+            <button onclick="saveProfileSettings()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl cursor-pointer">保存资料</button>
+        </div>
+    </div>
+
+    <!-- ⚡ 核心逻辑驱动层 ⚡ -->
+    <script>
+        // 1. 广义活动库与 MET 能量代谢当量（不局限健身，配有各种体育运动与日常活动标志）
+        const defaultSportsCatalog = [
+            { name: "公园漫步", icon: "fa-person-walking", met: 3.3 },
+            { name: "晚风慢跑", icon: "fa-person-running", met: 8.5 },
+            { name: "骑行漫游", icon: "fa-person-biking", met: 6.0 },
+            { name: "舒展瑜伽", icon: "fa-spa", met: 3.0 },
+            { name: "羽毛球切磋", icon: "fa-table-tennis-paddle-ball", met: 6.5 },
+            { name: "泳池畅游", icon: "fa-person-swimming", met: 7.8 },
+            { name: "跳绳暴汗", icon: "fa-bolt", met: 9.5 },
+            { name: "登山徒步", icon: "fa-mountain-sun", met: 7.0 },
+            { name: "家务扫除", icon: "fa-broom", met: 2.8 }
+        ];
+
+        let sportsCatalog = JSON.parse(localStorage.getItem("Breathe_SportsList")) || defaultSportsCatalog;
+        let selectedSport = sportsCatalog[0];
+        let currentMood = "舒展通透 🍃";
+
+        // 用户档案
+        let userProfile = JSON.parse(localStorage.getItem("Breathe_UserProfile")) || {
+            weight: 60,
+            height: 168,
+            age: 26,
+            bookName: "我的海风慢走集"
+        };
+
+        // 历史打卡手记
+        let workoutLogs = JSON.parse(localStorage.getItem("Breathe_WorkoutLogs")) || [];
+
+        // 初始化
+        document.addEventListener("DOMContentLoaded", () => {
+            const today = new Date();
+            document.getElementById("current-calendar-date").innerText = `${today.getMonth() + 1}月${today.getDate()}日`;
+            renderSportChips();
+            updateProfileUI();
+            calculateCaloriePreview();
+            renderDashboard();
+        });
+
+        // 2. 自定义手记本名字
+        function editBookNamePrompt() {
+            const newName = prompt("为你的专属运动手记起个好听的名字：", userProfile.bookName || "我的海风慢走集");
+            if (newName && newName.trim() !== "") {
+                userProfile.bookName = newName.trim();
+                localStorage.setItem("Breathe_UserProfile", JSON.stringify(userProfile));
+                updateProfileUI();
+            }
+        }
+
+        // 渲染活动标签
+        function renderSportChips() {
+            const container = document.getElementById("sport-chips-container");
+            container.innerHTML = "";
+            sportsCatalog.forEach(sport => {
+                const isActive = sport.name === selectedSport.name;
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = `tag-btn px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs flex items-center gap-1.5 transition cursor-pointer hover:border-emerald-300 ${isActive ? 'active' : ''}`;
+                btn.innerHTML = `<i class="fa-solid ${sport.icon} text-emerald-600 text-[11px]"></i> <span>${sport.name}</span>`;
+                btn.onclick = () => {
+                    selectedSport = sport;
+                    renderSportChips();
+                    calculateCaloriePreview();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function addCustomSport() {
+            const input = document.getElementById("custom-sport-name");
+            const val = input.value.trim();
+            if (!val) return;
+            const newSport = { name: val, icon: "fa-dumbbell", met: 5.0 };
+            sportsCatalog.push(newSport);
+            selectedSport = newSport;
+            localStorage.setItem("Breathe_SportsList", JSON.stringify(sportsCatalog));
+            input.value = "";
+            renderSportChips();
+            calculateCaloriePreview();
+        }
+
+        function selectMoodChip(moodText) {
+            currentMood = moodText;
+            document.querySelectorAll(".mood-chip").forEach(btn => {
+                if (btn.getAttribute("data-mood") === moodText) {
+                    btn.classList.add("active");
+                } else {
+                    btn.classList.remove("active");
+                }
+            });
+        }
+
+        // 3. 科学代谢量 (MET) 估算
+        function computeCalories(met, durationMin, heartRate) {
+            const weight = userProfile.weight;
+            // 基础代谢当量公式: 卡路里 = MET * 3.5 * 体重(kg) / 200 * 时间(分钟)
+            let cals = (met * 3.5 * weight / 200) * durationMin;
+
+            // 心率区间系数微调
+            if (heartRate && heartRate > 50) {
+                const maxHR = 220 - userProfile.age;
+                const ratio = heartRate / maxHR;
+                if (ratio > 0.8) cals *= 1.15;
+                else if (ratio < 0.6) cals *= 0.90;
+            }
+            return Math.round(cals);
+        }
+
+        function calculateCaloriePreview() {
+            const dur = parseFloat(document.getElementById("input-duration").value) || 0;
+            const hr = parseFloat(document.getElementById("input-heartrate").value) || null;
+            const cal = computeCalories(selectedSport.met, dur, hr);
+            document.getElementById("estimated-cal-pill").innerText = `预估消耗 ~${cal} kcal`;
+        }
+
+        // 4. 舒畅舒心的正向反馈与后续运动恢复建议生成器
+        function generateRestfulFeedback(sportName, duration, calories, heartRate, mood) {
+            const restfulCheers = [
+                "今天的汗水带走了身体里积攒的沉闷，现在的你一定很轻盈通透！🌿",
+                "运动后的舒畅感真是生活里不可多得的解药，享受这份宁静吧。✨",
+                "哪怕只是出门走走，身体也在悄悄感谢你的关照，今天做得真好！🌸",
+                "心跳平复之后的那口深呼吸，就是身体最惬意的时刻。🍃"
+            ];
+            const chosenCheer = restfulCheers[Math.floor(Math.random() * restfulCheers.length)];
+
+            // 生理负荷与下次运动恢复建议
+            let recoveryAdvice = "";
+            if (heartRate && heartRate >= (220 - userProfile.age) * 0.82) {
+                recoveryAdvice = "⚡ 今日心率到达了高效燃脂与心肺负荷区间，身体代谢正在持续运转。今晚适合喝一杯温水，做两组深层拉伸，明天建议以慢走或休息为主，给肌纤维充分放松。";
+            } else if (duration >= 60) {
+                recoveryAdvice = "⏱️ 本次活动超过 1 小时，能量消耗扎实。建议适量补充水分与清淡优质蛋白，下次运动可以换个轻柔的拉伸项目换换节奏。";
+            } else {
+                recoveryAdvice = "🌱 运动强度温和舒适，心肺负荷刚刚好。身体处于很放松的活跃状态，明天可以继续随心走走，享受自然的节奏。";
+            }
+
+            return { cheer: chosenCheer, advice: recoveryAdvice };
+        }
+
+        // 5. 保存手记打卡
+        function saveWorkoutRecord(e) {
+            e.preventDefault();
+            const duration = parseInt(document.getElementById("input-duration").value) || 0;
+            const hr = parseInt(document.getElementById("input-heartrate").value) || null;
+            const notes = document.getElementById("input-notes").value.trim();
+            const cal = computeCalories(selectedSport.met, duration, hr);
+            const feedback = generateRestfulFeedback(selectedSport.name, duration, cal, hr, currentMood);
+
+            const newLog = {
+                id: "log_" + Date.now(),
+                sportName: selectedSport.name,
+                sportIcon: selectedSport.icon,
+                duration: duration,
+                heartRate: hr,
+                calories: cal,
+                mood: currentMood,
+                notes: notes,
+                aiCheer: feedback.cheer,
+                aiAdvice: feedback.advice,
+                dateStr: new Date().toLocaleDateString("zh-CN", { month: "short", day: "numeric" })
+            };
+
+            workoutLogs.unshift(newLog);
+            localStorage.setItem("Breathe_WorkoutLogs", JSON.stringify(workoutLogs));
+
+            document.getElementById("input-notes").value = "";
+            renderDashboard();
+            calculateCaloriePreview();
+        }
+
+        // 6. 渲染看板数据与时间轴流
+        function renderDashboard() {
+            // 计算今日指标
+            const todayStr = new Date().toLocaleDateString("zh-CN", { month: "short", day: "numeric" });
+            const todayLogs = workoutLogs.filter(l => l.dateStr === todayStr);
+
+            const totalMins = todayLogs.reduce((acc, curr) => acc + curr.duration, 0);
+            const totalCals = todayLogs.reduce((acc, curr) => acc + curr.calories, 0);
+
+            document.getElementById("today-total-duration").innerText = totalMins;
+            document.getElementById("today-total-calories").innerText = totalCals;
+            document.getElementById("today-entry-count").innerText = todayLogs.length;
+
+            if (todayLogs.length > 0) {
+                document.getElementById("calm-positive-quote").innerText = todayLogs[0].aiCheer;
+            }
+
+            // 渲染手账卡片流
+            const streamContainer = document.getElementById("journal-cards-stream");
+            document.getElementById("record-count-badge").innerText = `共 ${workoutLogs.length} 篇手记`;
+
+            if (workoutLogs.length === 0) {
+                streamContainer.innerHTML = `
+                    <div class="bg-white border border-slate-200/80 rounded-3xl p-8 text-center text-slate-400 text-xs">
+                        这本运动手记还是崭新的。在左边记下今天的一次漫步或拉伸，记录下身体的舒展时刻吧。🍃
+                    </div>
+                `;
+                return;
+            }
+
+            streamContainer.innerHTML = "";
+            workoutLogs.forEach(log => {
+                const card = document.createElement("div");
+                card.className = "bg-white border border-slate-200/90 rounded-3xl p-5 shadow-xs transition hover:border-emerald-200 space-y-3";
+                card.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700 text-base">
+                                <i class="fa-solid ${log.sportIcon || 'fa-person-walking'}"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-xs font-bold text-slate-800">${log.sportName}</h3>
+                                    <span class="text-[10px] bg-amber-50 text-amber-800 border border-amber-200/60 px-2 py-0.5 rounded-full font-medium">${log.mood}</span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mt-0.5">
+                                    <span>${log.dateStr}</span> · 
+                                    <b class="text-slate-700 font-semibold">${log.duration} 分钟</b> · 
+                                    约消耗 <b class="text-emerald-600 font-semibold">${log.calories} kcal</b>
+                                    ${log.heartRate ? ` · 平均心率 <b class="text-sky-600 font-semibold">${log.heartRate} bpm</b>` : ''}
+                                </p>
+                            </div>
+                        </div>
+                        <button onclick="deleteLog('${log.id}')" class="text-slate-300 hover:text-rose-500 text-xs p-1 transition cursor-pointer" title="删除这篇手记">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+
+                    ${log.notes ? `
+                        <div class="bg-slate-50/80 border border-slate-200/60 rounded-2xl p-3 text-xs text-slate-700 leading-relaxed font-normal">
+                            <span class="text-[10px] font-bold text-slate-400 block mb-0.5"><i class="fa-solid fa-quote-left mr-1"></i>手记随笔</span>
+                            ${log.notes}
+                        </div>
+                    ` : ''}
+
+                    <!-- 舒缓反馈与后续身体恢复建议 -->
+                    <div class="bg-linear-to-r from-emerald-50/60 via-sky-50/40 to-amber-50/40 border border-emerald-100/70 rounded-2xl p-3 text-xs space-y-1">
+                        <div class="text-[11px] font-semibold text-emerald-800 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i>
+                            <span>${log.aiCheer}</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 leading-normal pl-4 border-l border-emerald-200">
+                            ${log.aiAdvice}
+                        </p>
+                    </div>
+                `;
+                streamContainer.appendChild(card);
+            });
+        }
+
+        function deleteLog(id) {
+            if (!confirm("确定删除这篇运动手记记录吗？")) return;
+            workoutLogs = workoutLogs.filter(l => l.id !== id);
+            localStorage.setItem("Breathe_WorkoutLogs", JSON.stringify(workoutLogs));
+            renderDashboard();
+            calculateCaloriePreview();
+        }
+
+        // 7. 个人资料设定
+        function toggleProfileModal() {
+            const m = document.getElementById("profile-modal");
+            m.classList.toggle("hidden");
+            if (!m.classList.contains("hidden")) {
+                document.getElementById("setting-weight").value = userProfile.weight;
+                document.getElementById("setting-height").value = userProfile.height;
+                document.getElementById("setting-age").value = userProfile.age;
+            }
+        }
+
+        function saveProfileSettings() {
+            userProfile.weight = parseFloat(document.getElementById("setting-weight").value) || 60;
+            userProfile.height = parseFloat(document.getElementById("setting-height").value) || 168;
+            userProfile.age = parseInt(document.getElementById("setting-age").value) || 26;
+
+            localStorage.setItem("Breathe_UserProfile", JSON.stringify(userProfile));
+            updateProfileUI();
+            toggleProfileModal();
+            calculateCaloriePreview();
+            renderDashboard();
+        }
+
+        function updateProfileUI() {
+            document.getElementById("profile-tag-text").innerText = `${userProfile.weight} kg · ${userProfile.height} cm · ${userProfile.age}岁`;
+            document.getElementById("display-custom-book-name").innerText = userProfile.bookName || "我的海风慢走集";
+        }
+    </script>
+</body>
+</html>
