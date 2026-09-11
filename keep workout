@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>舒展手记 - 你的身心放松运动生活志</title>
+    <title>动会儿 - 舒心运动与生理节奏手记</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,7 +13,7 @@
             background-color: #ecfdf5;
             border-color: #10b981;
             color: #047857;
-            box-shadow: 0 1px 2px rgba(16, 185, 129, 0.1);
+            box-shadow: 0 1px 2px rgba(16, 185, 129, 0.08);
         }
         .mood-chip.active {
             background-color: #fefce8;
@@ -23,29 +23,33 @@
         }
     </style>
 </head>
-<body class="bg-[#F6F9F8] text-slate-800 min-h-screen pb-16 selection:bg-emerald-100 selection:text-emerald-800">
+<body class="bg-[#F8FAF9] text-slate-800 min-h-screen pb-16 selection:bg-emerald-100 selection:text-emerald-800">
 
-    <!-- 顶栏：清新治愈风格 (浅蓝/浅绿柔和渐变微光) -->
-    <header class="border-b border-emerald-100/80 bg-white/80 backdrop-blur-md sticky top-0 z-40 px-4 lg:px-8 py-3.5">
+    <!-- 顶栏：微风柔和感 (浅蓝 / 浅绿微光) -->
+    <header class="border-b border-emerald-100/70 bg-white/85 backdrop-blur-md sticky top-0 z-40 px-4 lg:px-8 py-3.5">
         <div class="max-w-5xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-linear-to-br from-sky-100 via-emerald-100 to-amber-100 border border-emerald-200/60 flex items-center justify-center text-emerald-700 shadow-xs">
-                    <i class="fa-solid fa-person-walking text-lg"></i>
+                <div class="w-10 h-10 rounded-2xl bg-linear-to-br from-emerald-100 via-sky-100 to-amber-100 border border-emerald-200/50 flex items-center justify-center text-emerald-700 shadow-xs">
+                    <i class="fa-solid fa-feather-pointed text-lg"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <h1 class="text-base font-bold tracking-tight text-slate-800">舒展手记</h1>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-medium">Breathe & Motion</span>
+                        <h1 class="text-base font-bold tracking-tight text-slate-900">动会儿</h1>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-medium">身体在舒展 · 经期温养</span>
                     </div>
-                    <p class="text-[11px] text-slate-400">大汗淋漓后的风，是身体最惬意的时刻</p>
+                    <p class="text-[11px] text-slate-400">动一动，透透气，身心都很轻快</p>
                 </div>
             </div>
 
-            <!-- 右侧：身体基础档案调节 -->
+            <!-- 右侧：经期设置 + 身体参数配置 -->
             <div class="flex items-center gap-2">
-                <button onclick="toggleProfileModal()" class="flex items-center gap-1.5 bg-slate-50 hover:bg-emerald-50/60 border border-slate-200 hover:border-emerald-200 px-3 py-1.5 rounded-full text-xs text-slate-600 transition cursor-pointer">
+                <button onclick="toggleCycleModal()" class="flex items-center gap-1.5 bg-rose-50/80 hover:bg-rose-100/60 border border-rose-200/70 px-3 py-1.5 rounded-full text-xs text-rose-700 transition cursor-pointer">
+                    <i class="fa-solid fa-heart-pulse text-rose-500 text-[11px]"></i>
+                    <span id="cycle-header-pill">经期节奏</span>
+                </button>
+                <button onclick="toggleProfileModal()" class="flex items-center gap-1.5 bg-slate-50 hover:bg-emerald-50/60 border border-slate-200 px-3 py-1.5 rounded-full text-xs text-slate-600 transition cursor-pointer">
                     <i class="fa-solid fa-sliders text-emerald-600/70 text-[10px]"></i>
-                    <span id="profile-tag-text">60 kg · 168 cm · 26岁</span>
+                    <span id="profile-tag-text">60 kg · 168 cm</span>
                 </button>
             </div>
         </div>
@@ -53,35 +57,54 @@
 
     <main class="max-w-5xl mx-auto p-4 lg:p-8 space-y-6">
 
-        <!-- 🌿 个性化手记名展示与今日舒缓正向反馈区 -->
-        <section class="bg-linear-to-r from-emerald-50/70 via-sky-50/60 to-amber-50/70 border border-emerald-100 rounded-3xl p-5 shadow-xs relative overflow-hidden">
+        <!-- 🌸 女性专属：生理周期健康与运动提醒横幅 -->
+        <section id="cycle-banner" class="bg-linear-to-r from-rose-50/60 via-amber-50/40 to-sky-50/50 border border-rose-100 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="flex items-start sm:items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-white/90 border border-rose-200/80 flex items-center justify-center text-xl shrink-0 shadow-2xs">
+                    <span id="cycle-phase-icon">🌷</span>
+                </div>
+                <div class="space-y-1">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span id="cycle-phase-badge" class="text-xs font-bold text-rose-700 bg-rose-100/70 px-2.5 py-0.5 rounded-lg">计算周期中</span>
+                        <span id="cycle-countdown-badge" class="text-xs text-slate-500 font-medium">预计下次经期还有 -- 天</span>
+                    </div>
+                    <p id="cycle-exercise-advice" class="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                        记录最近一次月经首日，系统将结合周期智能推算生理阶段，提醒你什么时候适合爆发燃脂，什么时候宜温和慢走。
+                    </p>
+                </div>
+            </div>
+            <button onclick="toggleCycleModal()" class="px-3.5 py-2 bg-white/90 hover:bg-rose-50 border border-rose-200 rounded-xl text-xs font-semibold text-rose-700 shrink-0 transition shadow-2xs cursor-pointer">
+                <i class="fa-regular fa-calendar-check mr-1 text-rose-500"></i>记录 / 更新经期
+            </button>
+        </section>
+
+        <!-- 🌿 个性化手记名与当日舒适状态概览 -->
+        <section class="bg-linear-to-r from-emerald-50/70 via-sky-50/50 to-amber-50/60 border border-emerald-100/80 rounded-3xl p-5 shadow-xs">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 
-                <!-- 自定义手账本名与舒心问候 -->
                 <div class="space-y-1.5 flex-1">
                     <div class="flex items-center gap-2">
-                        <!-- 用户可自由修改的手记别名 -->
-                        <span class="text-xs font-bold text-emerald-800 bg-white/80 border border-emerald-200 px-2.5 py-1 rounded-xl shadow-2xs flex items-center gap-1.5">
+                        <span class="text-xs font-bold text-emerald-800 bg-white/85 border border-emerald-200 px-2.5 py-1 rounded-xl shadow-2xs flex items-center gap-1.5">
                             <i class="fa-solid fa-book-bookmark text-emerald-600"></i>
-                            <span id="display-custom-book-name">我的海风慢走集</span>
+                            <span id="display-custom-book-name">动会儿 · 生活散记</span>
                             <button onclick="editBookNamePrompt()" class="text-slate-400 hover:text-emerald-700 ml-1 cursor-pointer" title="重命名这本运动手记"><i class="fa-solid fa-pen text-[10px]"></i></button>
                         </span>
                         <span class="text-xs text-slate-400" id="current-calendar-date"></span>
                     </div>
                     <p id="calm-positive-quote" class="text-sm font-medium text-slate-700 leading-relaxed pt-1">
-                        每一次呼吸都在置换新鲜能量，今天去吹吹晚风，或者舒展一下筋骨吧。🍃
+                        不给身体施加压力，今天只要稍微活动会儿，微风都会吹散疲倦。🍃
                     </p>
                 </div>
 
-                <!-- 今日舒缓活动度概览 (浅蓝浅绿柔和仪表) -->
-                <div class="bg-white/85 border border-slate-200/80 rounded-2xl p-3 px-4 shrink-0 flex items-center gap-4 shadow-2xs">
+                <!-- 今日活动量概览 -->
+                <div class="bg-white/90 border border-slate-200/70 rounded-2xl p-3 px-4 shrink-0 flex items-center gap-4 shadow-2xs">
                     <div class="text-center border-r border-slate-100 pr-3">
-                        <span class="text-[10px] text-slate-400 block font-medium">今日运动时长</span>
+                        <span class="text-[10px] text-slate-400 block font-medium">今日动了</span>
                         <span id="today-total-duration" class="text-base font-bold text-emerald-700">0</span>
                         <span class="text-[10px] text-slate-400">分钟</span>
                     </div>
                     <div class="text-center border-r border-slate-100 pr-3">
-                        <span class="text-[10px] text-slate-400 block font-medium">身体代谢约</span>
+                        <span class="text-[10px] text-slate-400 block font-medium">消耗约</span>
                         <span id="today-total-calories" class="text-base font-bold text-sky-700">0</span>
                         <span class="text-[10px] text-slate-400">kcal</span>
                     </div>
@@ -95,7 +118,7 @@
             </div>
         </section>
 
-        <!-- 主内容区：左侧打卡录入，右侧手账日记流 -->
+        <!-- 主内容区：左侧录入，右侧手账日记流 -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
             <!-- 📝 记录身体手记表单 (5列) -->
@@ -104,9 +127,9 @@
                     <div class="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-100">
                         <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
                             <span class="w-6 h-6 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center text-xs">
-                                <i class="fa-solid fa-feather-pointed"></i>
+                                <i class="fa-solid fa-person-running"></i>
                             </span>
-                            <span>落笔今日活动</span>
+                            <span>今天动了会儿</span>
                         </h2>
                         <span id="estimated-cal-pill" class="text-xs font-semibold text-emerald-700 bg-emerald-50/80 border border-emerald-200/70 px-2.5 py-0.5 rounded-full">
                             预估消耗 ~0 kcal
@@ -115,19 +138,17 @@
 
                     <form onsubmit="saveWorkoutRecord(event)" class="space-y-4 text-xs">
                         
-                        <!-- 自由活动类型 (生活化、多样化运动) -->
+                        <!-- 自由活动类型 -->
                         <div>
                             <label class="block text-[11px] font-bold text-slate-400 mb-2 flex items-center gap-1">
-                                <i class="fa-solid fa-medal text-amber-500"></i>
-                                <span>选择活动方式 (任何日常身体位移都算运动)</span>
+                                <i class="fa-solid fa-volleyball text-amber-500"></i>
+                                <span>选择活动方式 (广义运动，动起来都算数)</span>
                             </label>
-                            <div id="sport-chips-container" class="flex flex-wrap gap-2">
-                                <!-- 动态注入标签 -->
-                            </div>
+                            <div id="sport-chips-container" class="flex flex-wrap gap-2"></div>
                             <!-- 自定义标签 -->
                             <div class="mt-2 flex gap-1.5">
-                                <input type="text" id="custom-sport-name" placeholder="添加新活动 (如：傍晚滑板/爬山看落日/收拾房间)" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-emerald-500">
-                                <button type="button" onclick="addCustomSport()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-xl text-xs font-medium text-slate-600 cursor-pointer">+ 自定义</button>
+                                <input type="text" id="custom-sport-name" placeholder="添加自定义活动 (如：河边快步走/飞盘/拉伸操)" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-emerald-500">
+                                <button type="button" onclick="addCustomSport()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-xl text-xs font-medium text-slate-600 cursor-pointer">+ 添加</button>
                             </div>
                         </div>
 
@@ -139,34 +160,34 @@
                             </div>
                             <div>
                                 <label class="block text-[11px] font-bold text-slate-400 mb-1">平均心率 (选填 bpm)</label>
-                                <input type="number" id="input-heartrate" min="40" max="220" placeholder="如 132" oninput="calculateCaloriePreview()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 font-bold text-slate-800 focus:outline-none focus:border-sky-500">
+                                <input type="number" id="input-heartrate" min="40" max="220" placeholder="如 128" oninput="calculateCaloriePreview()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 font-bold text-slate-800 focus:outline-none focus:border-sky-500">
                             </div>
                         </div>
 
-                        <!-- 运动过后的心境徽章 (营造舒畅舒心的生活感) -->
+                        <!-- 运动过后的心境徽章 -->
                         <div>
-                            <label class="block text-[11px] font-bold text-slate-400 mb-1.5">动完之后的体感与心境</label>
+                            <label class="block text-[11px] font-bold text-slate-400 mb-1.5">动完的体感与心境</label>
                             <div class="grid grid-cols-4 gap-1.5 text-center">
                                 <button type="button" onclick="selectMoodChip('舒展通透 🍃')" class="mood-chip p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50/50 cursor-pointer active" data-mood="舒展通透 🍃">舒展通透 🍃</button>
                                 <button type="button" onclick="selectMoodChip('畅快微汗 💧')" class="mood-chip p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50/50 cursor-pointer" data-mood="畅快微汗 💧">畅快微汗 💧</button>
                                 <button type="button" onclick="selectMoodChip('身心放空 ☁️')" class="mood-chip p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50/50 cursor-pointer" data-mood="身心放空 ☁️">身心放空 ☁️</button>
-                                <button type="button" onclick="selectMoodChip('温热平静 ☀️')" class="mood-chip p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50/50 cursor-pointer" data-mood="温热平静 ☀️">温热平静 ☀️</button>
+                                <button type="button" onclick="selectMoodChip('温润踏实 ☀️')" class="mood-chip p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50/50 cursor-pointer" data-mood="温润踏实 ☀️">温润踏实 ☀️</button>
                             </div>
                         </div>
 
-                        <!-- 运动日记/生活随笔 -->
+                        <!-- 运动日记随笔 -->
                         <div>
                             <label class="block text-[11px] font-bold text-slate-400 mb-1 flex justify-between">
-                                <span>运动手记 · 随笔感想</span>
-                                <span class="text-[10px] text-slate-400">记下今天耳机里的歌、微风或者身体的小反馈</span>
+                                <span>运动随笔 · 日记感悟</span>
+                                <span class="text-[10px] text-slate-400">记录身体状态、流汗的感觉或小情绪</span>
                             </label>
-                            <textarea id="input-notes" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs text-slate-700 focus:outline-none focus:border-emerald-500 resize-none leading-relaxed" placeholder="吹着晚风跑了三公里，耳机里播着喜欢的歌；出了一层薄汗，整个人像从沉闷里被彻底清洗了一遍，心旷神怡..."></textarea>
+                            <textarea id="input-notes" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs text-slate-700 focus:outline-none focus:border-emerald-500 resize-none leading-relaxed" placeholder="今天慢跑了半小时，风吹在脸上格外轻盈；洗了个热水澡，感觉整个脊椎和肩颈都彻底松开了..."></textarea>
                         </div>
 
-                        <!-- 保存按钮 (浅绿微渐变，舒缓按压感) -->
+                        <!-- 保存按钮 -->
                         <button type="submit" class="w-full py-3 bg-linear-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-2xl cursor-pointer shadow-xs transition-all active:scale-[0.99] flex items-center justify-center gap-2">
                             <i class="fa-solid fa-check text-xs"></i>
-                            <span>收录入手记并查看舒展反馈</span>
+                            <span>收录入手记并查看身心反馈</span>
                         </button>
                     </form>
                 </div>
@@ -177,24 +198,59 @@
                 <div class="flex items-center justify-between px-1">
                     <div class="flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">漫游日记与身体足迹</h2>
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">运动生活足迹</h2>
                     </div>
                     <span id="record-count-badge" class="text-xs text-slate-400">共 0 篇手记</span>
                 </div>
 
-                <div id="journal-cards-stream" class="space-y-3.5">
-                    <!-- 动态生成的手账卡片 -->
-                </div>
+                <div id="journal-cards-stream" class="space-y-3.5"></div>
             </div>
 
         </div>
     </main>
 
+    <!-- 🌸 经期健康管理设定模态窗 -->
+    <div id="cycle-modal" class="fixed inset-0 bg-slate-900/30 backdrop-blur-xs flex items-center justify-center z-50 hidden px-4">
+        <div class="bg-white border border-rose-100 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-xl">
+            <div class="flex justify-between items-center pb-2 border-b border-rose-100">
+                <h3 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <span>🌷</span> 经期记录与月度提醒设置
+                </h3>
+                <button onclick="toggleCycleModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="text-slate-600 font-medium block mb-1">最近一次月经开始日期</label>
+                    <input type="date" id="cycle-last-date" class="w-full bg-rose-50/40 border border-rose-200 rounded-xl p-2 text-slate-800 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="text-slate-600 font-medium block mb-1">平均周期 (天)</label>
+                        <input type="number" id="cycle-period-days" min="20" max="60" value="28" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-800 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-slate-600 font-medium block mb-1">行经天数 (天)</label>
+                        <input type="number" id="cycle-flow-days" min="2" max="10" value="5" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-800 focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-slate-600 font-medium block mb-1">次月提前提醒天数</label>
+                    <select id="cycle-alert-advance" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-800 focus:outline-none">
+                        <option value="2">提前 2 天提醒（适时减速）</option>
+                        <option value="3" selected>提前 3 天提醒（推荐，备好温养）</option>
+                        <option value="5">提前 5 天提醒（提前调整剧烈运动计划）</option>
+                    </select>
+                </div>
+            </div>
+            <button onclick="saveCycleSettings()" class="w-full py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs rounded-xl cursor-pointer shadow-xs">保存并推算健康节奏</button>
+        </div>
+    </div>
+
     <!-- 个人基本数据设置弹窗 -->
     <div id="profile-modal" class="fixed inset-0 bg-slate-900/30 backdrop-blur-xs flex items-center justify-center z-50 hidden px-4">
         <div class="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-xl">
             <div class="flex justify-between items-center pb-2 border-b border-slate-100">
-                <h3 class="text-sm font-bold text-slate-800">身体参数设定 (用于推算代谢量)</h3>
+                <h3 class="text-sm font-bold text-slate-800">身体参数设定 (推算能量代谢)</h3>
                 <button onclick="toggleProfileModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="space-y-3 text-xs">
@@ -217,33 +273,41 @@
 
     <!-- ⚡ 核心逻辑驱动层 ⚡ -->
     <script>
-        // 1. 广义活动库与 MET 能量代谢当量（不局限健身，配有各种体育运动与日常活动标志）
+        // 1. 广义活动与体育图标库 (各种体育活动，不拘泥于健身)
         const defaultSportsCatalog = [
             { name: "公园漫步", icon: "fa-person-walking", met: 3.3 },
-            { name: "晚风慢跑", icon: "fa-person-running", met: 8.5 },
-            { name: "骑行漫游", icon: "fa-person-biking", met: 6.0 },
-            { name: "舒展瑜伽", icon: "fa-spa", met: 3.0 },
-            { name: "羽毛球切磋", icon: "fa-table-tennis-paddle-ball", met: 6.5 },
-            { name: "泳池畅游", icon: "fa-person-swimming", met: 7.8 },
-            { name: "跳绳暴汗", icon: "fa-bolt", met: 9.5 },
-            { name: "登山徒步", icon: "fa-mountain-sun", met: 7.0 },
-            { name: "家务扫除", icon: "fa-broom", met: 2.8 }
+            { name: "慢跑透气", icon: "fa-person-running", met: 8.5 },
+            { name: "微风骑行", icon: "fa-person-biking", met: 6.0 },
+            { name: "身心瑜伽", icon: "fa-spa", met: 3.0 },
+            { name: "羽毛球", icon: "fa-table-tennis-paddle-ball", met: 6.5 },
+            { name: "舒展拉伸", icon: "fa-child-reaching", met: 2.5 },
+            { name: "轻度游泳", icon: "fa-person-swimming", met: 7.0 },
+            { name: "跳绳排汗", icon: "fa-bolt", met: 9.0 },
+            { name: "日常打扫", icon: "fa-broom", met: 2.8 }
         ];
 
-        let sportsCatalog = JSON.parse(localStorage.getItem("Breathe_SportsList")) || defaultSportsCatalog;
+        let sportsCatalog = JSON.parse(localStorage.getItem("DongHui_SportsList")) || defaultSportsCatalog;
         let selectedSport = sportsCatalog[0];
         let currentMood = "舒展通透 🍃";
 
         // 用户档案
-        let userProfile = JSON.parse(localStorage.getItem("Breathe_UserProfile")) || {
+        let userProfile = JSON.parse(localStorage.getItem("DongHui_UserProfile")) || {
             weight: 60,
             height: 168,
             age: 26,
-            bookName: "我的海风慢走集"
+            bookName: "动会儿 · 生活散记"
+        };
+
+        // 女性经期健康数据
+        let cycleProfile = JSON.parse(localStorage.getItem("DongHui_CycleProfile")) || {
+            lastPeriodDate: "",
+            cycleLength: 28,
+            flowLength: 5,
+            advanceDays: 3
         };
 
         // 历史打卡手记
-        let workoutLogs = JSON.parse(localStorage.getItem("Breathe_WorkoutLogs")) || [];
+        let workoutLogs = JSON.parse(localStorage.getItem("DongHui_WorkoutLogs")) || [];
 
         // 初始化
         document.addEventListener("DOMContentLoaded", () => {
@@ -252,20 +316,113 @@
             renderSportChips();
             updateProfileUI();
             calculateCaloriePreview();
+            updateCycleDashboard();
             renderDashboard();
         });
 
-        // 2. 自定义手记本名字
+        // 2. 自定义手记本名
         function editBookNamePrompt() {
-            const newName = prompt("为你的专属运动手记起个好听的名字：", userProfile.bookName || "我的海风慢走集");
+            const newName = prompt("为你的这本【动会儿】手记起个专属副标题或别名：", userProfile.bookName || "动会儿 · 生活散记");
             if (newName && newName.trim() !== "") {
                 userProfile.bookName = newName.trim();
-                localStorage.setItem("Breathe_UserProfile", JSON.stringify(userProfile));
+                localStorage.setItem("DongHui_UserProfile", JSON.stringify(userProfile));
                 updateProfileUI();
             }
         }
 
-        // 渲染活动标签
+        // 3. 经期推算与运动提醒逻辑
+        function updateCycleDashboard() {
+            if (!cycleProfile.lastPeriodDate) {
+                document.getElementById("cycle-phase-badge").innerText = "尚未记录经期";
+                document.getElementById("cycle-countdown-badge").innerText = "点击右侧记录，即享经期贴心运动指南";
+                document.getElementById("cycle-exercise-advice").innerText = "记录最近一次月经首日，动会儿会在每次经期到来前 3 天提醒你放慢步调，并在不同阶段推送最舒适的运动建议。";
+                document.getElementById("cycle-phase-icon").innerText = "🌸";
+                return;
+            }
+
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const lastStart = new Date(cycleProfile.lastPeriodDate);
+            lastStart.setHours(0,0,0,0);
+
+            const diffTime = today.getTime() - lastStart.getTime();
+            const daysSinceLast = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            const cycleLen = parseInt(cycleProfile.cycleLength) || 28;
+            const flowLen = parseInt(cycleProfile.flowLength) || 5;
+            const advance = parseInt(cycleProfile.advanceDays) || 3;
+
+            // 当前周期内的第几天 (1 ~ cycleLen)
+            const currentCycleDay = (daysSinceLast % cycleLen) + 1;
+            // 距离下次经期天数
+            const daysUntilNext = cycleLen - currentCycleDay + 1;
+
+            let phaseName = "";
+            let phaseIcon = "🌿";
+            let adviceText = "";
+
+            if (currentCycleDay <= flowLen) {
+                // 1. 月经期
+                phaseName = `行经期 (第 ${currentCycleDay} 天)`;
+                phaseIcon = "🩸";
+                adviceText = "经期骨盆与身体较敏感，建议以轻柔散步、温和肩颈拉伸为主，避免深蹲剧烈跳跃或高负荷卷腹，多喝温水保暖。";
+            } else if (daysUntilNext <= advance) {
+                // 2. 经前预警期 (次月提前几天提醒)
+                phaseName = `经前期 · 提前温养 (再过 ${daysUntilNext} 天经期)`;
+                phaseIcon = "🌙";
+                adviceText = `【经期预告】预计还有 ${daysUntilNext} 天进入生理期。此时黄体酮波动容易水肿疲劳，建议将剧烈运动转为慢跑、慢走或阴瑜伽，饮食少盐多安睡。`;
+            } else if (currentCycleDay <= 13) {
+                // 3. 卵泡期 (精力充沛期)
+                phaseName = `卵泡活力期 (第 ${currentCycleDay} 天)`;
+                phaseIcon = "⚡";
+                adviceText = "雌激素稳步上升，体能与恢复力处于黄金巅峰！此时状态最佳，适合挑战燃脂跑、羽毛球切磋或增加运动时长。";
+            } else if (currentCycleDay <= 16) {
+                // 4. 排卵期
+                phaseName = `排卵高光期 (第 ${currentCycleDay} 天)`;
+                phaseIcon = "✨";
+                adviceText = "精力旺盛，情绪舒展。可以尽情去户外大汗淋漓一场，感受运动后内啡肽带来的通透快乐。";
+            } else {
+                // 5. 黄体期
+                phaseName = `黄体平稳期 (第 ${currentCycleDay} 天)`;
+                phaseIcon = "🍂";
+                adviceText = "体温稍有微升，代谢平缓。建议维持规律的中等强度活动（如轻度骑行、快走），有助于舒缓情绪压力。";
+            }
+
+            document.getElementById("cycle-phase-badge").innerText = phaseName;
+            document.getElementById("cycle-countdown-badge").innerText = `距下次经期约 ${daysUntilNext} 天`;
+            document.getElementById("cycle-exercise-advice").innerText = adviceText;
+            document.getElementById("cycle-phase-icon").innerText = phaseIcon;
+            document.getElementById("cycle-header-pill").innerText = daysUntilNext <= advance ? `经前 ${daysUntilNext} 天` : "经期温养";
+        }
+
+        function toggleCycleModal() {
+            const m = document.getElementById("cycle-modal");
+            m.classList.toggle("hidden");
+            if (!m.classList.contains("hidden")) {
+                document.getElementById("cycle-last-date").value = cycleProfile.lastPeriodDate || "";
+                document.getElementById("cycle-period-days").value = cycleProfile.cycleLength || 28;
+                document.getElementById("cycle-flow-days").value = cycleProfile.flowLength || 5;
+                document.getElementById("cycle-alert-advance").value = cycleProfile.advanceDays || 3;
+            }
+        }
+
+        function saveCycleSettings() {
+            const lastDate = document.getElementById("cycle-last-date").value;
+            if (!lastDate) {
+                alert("请选定最近一次月经来潮的日期！");
+                return;
+            }
+            cycleProfile.lastPeriodDate = lastDate;
+            cycleProfile.cycleLength = parseInt(document.getElementById("cycle-period-days").value) || 28;
+            cycleProfile.flowLength = parseInt(document.getElementById("cycle-flow-days").value) || 5;
+            cycleProfile.advanceDays = parseInt(document.getElementById("cycle-alert-advance").value) || 3;
+
+            localStorage.setItem("DongHui_CycleProfile", JSON.stringify(cycleProfile));
+            toggleCycleModal();
+            updateCycleDashboard();
+        }
+
+        // 4. 活动标签选择与自定义
         function renderSportChips() {
             const container = document.getElementById("sport-chips-container");
             container.innerHTML = "";
@@ -288,10 +445,10 @@
             const input = document.getElementById("custom-sport-name");
             const val = input.value.trim();
             if (!val) return;
-            const newSport = { name: val, icon: "fa-dumbbell", met: 5.0 };
+            const newSport = { name: val, icon: "fa-medal", met: 4.8 };
             sportsCatalog.push(newSport);
             selectedSport = newSport;
-            localStorage.setItem("Breathe_SportsList", JSON.stringify(sportsCatalog));
+            localStorage.setItem("DongHui_SportsList", JSON.stringify(sportsCatalog));
             input.value = "";
             renderSportChips();
             calculateCaloriePreview();
@@ -308,13 +465,10 @@
             });
         }
 
-        // 3. 科学代谢量 (MET) 估算
+        // 5. 科学代谢量计算
         function computeCalories(met, durationMin, heartRate) {
             const weight = userProfile.weight;
-            // 基础代谢当量公式: 卡路里 = MET * 3.5 * 体重(kg) / 200 * 时间(分钟)
             let cals = (met * 3.5 * weight / 200) * durationMin;
-
-            // 心率区间系数微调
             if (heartRate && heartRate > 50) {
                 const maxHR = 220 - userProfile.age;
                 const ratio = heartRate / maxHR;
@@ -331,30 +485,29 @@
             document.getElementById("estimated-cal-pill").innerText = `预估消耗 ~${cal} kcal`;
         }
 
-        // 4. 舒畅舒心的正向反馈与后续运动恢复建议生成器
+        // 舒缓正向反馈
         function generateRestfulFeedback(sportName, duration, calories, heartRate, mood) {
             const restfulCheers = [
-                "今天的汗水带走了身体里积攒的沉闷，现在的你一定很轻盈通透！🌿",
-                "运动后的舒畅感真是生活里不可多得的解药，享受这份宁静吧。✨",
-                "哪怕只是出门走走，身体也在悄悄感谢你的关照，今天做得真好！🌸",
-                "心跳平复之后的那口深呼吸，就是身体最惬意的时刻。🍃"
+                "今天的汗水带走了身体里积攒的沉闷，现在的你一定格外轻盈！🌿",
+                "动完这会儿，整个人的呼吸都通透了，享受这份专属舒缓吧。✨",
+                "身体在悄悄感谢你的关照，哪怕只是舒展片刻，也是爱自己的证明。🌸",
+                "动会儿后的微风和温水，是生活里最惬意的小治愈。🍃"
             ];
             const chosenCheer = restfulCheers[Math.floor(Math.random() * restfulCheers.length)];
 
-            // 生理负荷与下次运动恢复建议
             let recoveryAdvice = "";
             if (heartRate && heartRate >= (220 - userProfile.age) * 0.82) {
-                recoveryAdvice = "⚡ 今日心率到达了高效燃脂与心肺负荷区间，身体代谢正在持续运转。今晚适合喝一杯温水，做两组深层拉伸，明天建议以慢走或休息为主，给肌纤维充分放松。";
+                recoveryAdvice = "⚡ 今日心率到达了较强的高峰区间，身体代谢正在持续运转。今晚可以泡个温水脚，早点安睡，给身体充分放松。";
             } else if (duration >= 60) {
-                recoveryAdvice = "⏱️ 本次活动超过 1 小时，能量消耗扎实。建议适量补充水分与清淡优质蛋白，下次运动可以换个轻柔的拉伸项目换换节奏。";
+                recoveryAdvice = "⏱️ 本次活动满 1 小时，能量消耗很充沛。适量喝点温水或红枣茶，明天换个温和的项目换换步调。";
             } else {
-                recoveryAdvice = "🌱 运动强度温和舒适，心肺负荷刚刚好。身体处于很放松的活跃状态，明天可以继续随心走走，享受自然的节奏。";
+                recoveryAdvice = "🌱 强度温和舒畅，心肺负荷轻盈无压力。身体正处于极佳的舒展状态，继续享受这种节奏。";
             }
 
             return { cheer: chosenCheer, advice: recoveryAdvice };
         }
 
-        // 5. 保存手记打卡
+        // 6. 保存手记记录
         function saveWorkoutRecord(e) {
             e.preventDefault();
             const duration = parseInt(document.getElementById("input-duration").value) || 0;
@@ -378,16 +531,15 @@
             };
 
             workoutLogs.unshift(newLog);
-            localStorage.setItem("Breathe_WorkoutLogs", JSON.stringify(workoutLogs));
+            localStorage.setItem("DongHui_WorkoutLogs", JSON.stringify(workoutLogs));
 
             document.getElementById("input-notes").value = "";
             renderDashboard();
             calculateCaloriePreview();
         }
 
-        // 6. 渲染看板数据与时间轴流
+        // 7. 渲染时间轴流
         function renderDashboard() {
-            // 计算今日指标
             const todayStr = new Date().toLocaleDateString("zh-CN", { month: "short", day: "numeric" });
             const todayLogs = workoutLogs.filter(l => l.dateStr === todayStr);
 
@@ -402,14 +554,13 @@
                 document.getElementById("calm-positive-quote").innerText = todayLogs[0].aiCheer;
             }
 
-            // 渲染手账卡片流
             const streamContainer = document.getElementById("journal-cards-stream");
             document.getElementById("record-count-badge").innerText = `共 ${workoutLogs.length} 篇手记`;
 
             if (workoutLogs.length === 0) {
                 streamContainer.innerHTML = `
                     <div class="bg-white border border-slate-200/80 rounded-3xl p-8 text-center text-slate-400 text-xs">
-                        这本运动手记还是崭新的。在左边记下今天的一次漫步或拉伸，记录下身体的舒展时刻吧。🍃
+                        这本【动会儿】手记还是崭新的。在左边记录下今天动的一小会儿，写下身体的舒展时刻吧。🍃
                     </div>
                 `;
                 return;
@@ -423,7 +574,7 @@
                     <div class="flex items-start justify-between">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700 text-base">
-                                <i class="fa-solid ${log.sportIcon || 'fa-person-walking'}"></i>
+                                <i class="fa-solid ${log.sportIcon || 'fa-medal'}"></i>
                             </div>
                             <div>
                                 <div class="flex items-center gap-2">
@@ -438,19 +589,19 @@
                                 </p>
                             </div>
                         </div>
-                        <button onclick="deleteLog('${log.id}')" class="text-slate-300 hover:text-rose-500 text-xs p-1 transition cursor-pointer" title="删除这篇手记">
+                        <button onclick="deleteLog('${log.id}')" class="text-slate-300 hover:text-rose-500 text-xs p-1 transition cursor-pointer" title="删除手记">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </div>
 
                     ${log.notes ? `
                         <div class="bg-slate-50/80 border border-slate-200/60 rounded-2xl p-3 text-xs text-slate-700 leading-relaxed font-normal">
-                            <span class="text-[10px] font-bold text-slate-400 block mb-0.5"><i class="fa-solid fa-quote-left mr-1"></i>手记随笔</span>
+                            <span class="text-[10px] font-bold text-slate-400 block mb-0.5"><i class="fa-solid fa-quote-left mr-1"></i>手记感悟</span>
                             ${log.notes}
                         </div>
                     ` : ''}
 
-                    <!-- 舒缓反馈与后续身体恢复建议 -->
+                    <!-- 舒缓反馈卡片 -->
                     <div class="bg-linear-to-r from-emerald-50/60 via-sky-50/40 to-amber-50/40 border border-emerald-100/70 rounded-2xl p-3 text-xs space-y-1">
                         <div class="text-[11px] font-semibold text-emerald-800 flex items-center gap-1.5">
                             <i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i>
@@ -466,14 +617,14 @@
         }
 
         function deleteLog(id) {
-            if (!confirm("确定删除这篇运动手记记录吗？")) return;
+            if (!confirm("确定删除这篇手记记录吗？")) return;
             workoutLogs = workoutLogs.filter(l => l.id !== id);
-            localStorage.setItem("Breathe_WorkoutLogs", JSON.stringify(workoutLogs));
+            localStorage.setItem("DongHui_WorkoutLogs", JSON.stringify(workoutLogs));
             renderDashboard();
             calculateCaloriePreview();
         }
 
-        // 7. 个人资料设定
+        // 8. 个人身体参数
         function toggleProfileModal() {
             const m = document.getElementById("profile-modal");
             m.classList.toggle("hidden");
@@ -489,7 +640,7 @@
             userProfile.height = parseFloat(document.getElementById("setting-height").value) || 168;
             userProfile.age = parseInt(document.getElementById("setting-age").value) || 26;
 
-            localStorage.setItem("Breathe_UserProfile", JSON.stringify(userProfile));
+            localStorage.setItem("DongHui_UserProfile", JSON.stringify(userProfile));
             updateProfileUI();
             toggleProfileModal();
             calculateCaloriePreview();
@@ -497,8 +648,8 @@
         }
 
         function updateProfileUI() {
-            document.getElementById("profile-tag-text").innerText = `${userProfile.weight} kg · ${userProfile.height} cm · ${userProfile.age}岁`;
-            document.getElementById("display-custom-book-name").innerText = userProfile.bookName || "我的海风慢走集";
+            document.getElementById("profile-tag-text").innerText = `${userProfile.weight} kg · ${userProfile.height} cm`;
+            document.getElementById("display-custom-book-name").innerText = userProfile.bookName || "动会儿 · 生活散记";
         }
     </script>
 </body>
